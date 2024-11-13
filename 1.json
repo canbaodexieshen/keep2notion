@@ -2,19 +2,19 @@
     "ok": true,
     "data": {
         "user": {
-            "username": "malinkang",
-            "avatar": "https://static1.keepcdn.com/user-avatar/2023/09/03/20/59edc5091cf3d14e9ed9e1fc/edcc93bfdfeec1825134e862eac38a29.jpg",
-            "birthday": 611539200000,
-            "_id": "59edc5091cf3d14e9ed9e1fc"
+            "username": "残暴的邪神",
+            "avatar": "https://static1.keepcdn.com/avatar/2018/03/10/18/3eccd2053d760f59e8a41cde25aa7661a0ced8b8.jpg",
+            "birthday": 1092873600000,
+            "_id": "5aa3ba9be666862ed133b66b"
         },
-        "id": "59edc5091cf3d14e9ed9e1fc_9223370306740694807_hk",
+        "id": "5aa3ba9be666862ed133b66b_9223370305398862807_hk",
         "feel": -1,
-        "calorie": 169,
-        "duration": 951,
-        "startTime": 1730113130000,
-        "endTime": 1730114081000,
+        "calorie": 36,
+        "duration": 541,
+        "startTime": 1731455371000,
+        "endTime": 1731455913000,
         "type": "hiking",
-        "subtype": "tramping",
+        "subtype": "normal",
         "timezone": "Asia/Shanghai",
         "richText": "",
         "entryInfo": {
@@ -31,28 +31,24 @@
         },
         "eventInfos": [],
         "liveSessionId": "",
-        "doubtful": true,
-        "doubtfulTips": "系统检测到，你在同一时间上传多条不同的运动记录。为保证数据准确，请选择 1 条保留，其余的将为你删除。",
-        "doubtfulScore": 0.7,
+        "doubtful": false,
+        "doubtfulTips": "",
+        "doubtfulScore": 0.0,
         "flags": [
-            6004,
             29,
-            95011,
-            95,
-            10095001,
-            98000
+            95012
         ],
         "heartRate": {
-            "heartRates": "H4sIAAAAAAAAE72WsW7DIBRFd38FypzB2GCgWz+gUvYogyuRylJSVcWRKlX590CSocPpxmPwchgODy7ved8p9Zs/pTbH0/yRNupF7bs7OGwffEm7+ZJiWTnOpxSf+D3Oa9rF77fl87LeV7U2z7V1Oce0zuevgl34Q19/lvSAmV23Ve0j2fVA+kzr+wf0T+ifWtU/9OTPtL5fo9+i37Y6/8Gj3wv4Mf3jSP5Mq/sHvH+D+TcC+f/Hj/Ubifo9+S3WbwXqH3v0Y/6tQP5HzL8N6A8Cfkf+CeufJOoP5Hd4/07g/g32P8fjT2D+GXx/Hvu/F+j/ZkI/zj8vMP8M5s9j/r1A/tkfDPkzre/H/Ote4w9IxtV3YLED6h5bQMGtzkDzGeh2Z6AxBgU32wE+hILLDrrDDcXFSgIKDAAA",
-            "averageHeartRate": 132.20833,
-            "maxHeartRate": 150,
-            "wearableDevices": []
+            "heartRates": null,
+            "averageHeartRate": 0.0,
+            "maxHeartRate": 0,
+            "wearableDevices": null
         },
         "vendor": {
             "source": "Keep",
             "manufacturer": null,
             "genre": "AutoGene",
-            "deviceModel": "health_workout",
+            "deviceModel": "pedometer",
             "vendorRecordId": null
         },
         "planId": null,
@@ -65,44 +61,26 @@
         "feedback": null,
         "feedbacks": null,
         "playType": null,
-        "dataType": "mountaineering",
+        "dataType": "outdoorWalking",
         "badgeAchievementCard": null,
         "goalType": "casual",
         "goalValue": 0,
-        "distance": 1791.1199951171875,
-        "averagePace": 530,
-        "averageSpeed": 6.7,
+        "distance": 621.7154541015625,
+        "averagePace": 870,
+        "averageSpeed": 4.1,
         "polylineSnapshot": null,
         "constantVersion": "1.3.21",
-        "rawDataURL": "https://ot-sport-log.keepcdn.com/ot-sport-log/ot/9VPdohFqV94ULxbnE8B08IdNm_85tefS6bHpi7gmywulFYx1RLmP6QsKwwfOKj4Q.txt",
-        "crossKmPoints": [
-            {
-                "id": null,
-                "kmPace": 364,
-                "kmNO": 1,
-                "latitude": 0.0,
-                "longitude": 0.0,
-                "altitude": 0.0,
-                "timestamp": 17301135050,
-                "totalDistance": 1028.4217529296875,
-                "totalDuration": 375.0,
-                "totalSteps": 1014.0,
-                "averagePointsNum": 0.0,
-                "averageAccuracyRadius": 0.0,
-                "totalCalories": 0,
-                "averageHeartRate": 0,
-                "stepFrequency": 162
-            }
-        ],
-        "geoPoints": "JgOlB5Itqh68eUeDyiMp2R8T2cwEeZoTod8+NC0U7kblsEz0eg1xlZZRIPClnx/9vAMEYL7ERyNSmes1JJIQf4YDpt2Xo7tplkSMRoj/yaxPMXOd55k5+omWQGD5o6xk2PJ3YJOhw9RBVejSPWx3ihLNS7hLIJVs2WQcO9RLf8+RJPHVUKWpCQkmVRNRP9fwyExrystoAiuNPL7cgbZ0KluuGmW7Z6ILao2poOrvDwYoVXPOlw3BYzGzuAsc4S/a7k63zVWhW/kgpBHUTZub6727eyr68wgis6nKVOYWUlpKvpnLZp1VpCV/76ggteVzkQuVHmWiywrRQVq4Xf2YcjvV+5bz3fzCycSUdizKsLsdGL/JQnE9FDpmwJmCDjcPscgcvs9wHKXC70Dbuj26sLSC2WRoPn9c6VCPgB3gomBGJizyFKn3X4GaUidA5kgA",
+        "rawDataURL": "https://ot-sport-log.keepcdn.com/ot-sport-log/ot/bMrCp5WOpaWZGPKxPvFlXP5fBKNqHvuAETO-ROqsvkTUYYNM8TszWcHhmCt12tyK.txt",
+        "crossKmPoints": [],
+        "geoPoints": "33mzkzGnozddUIrCrnsqwFB17OK54ySxaIg6lZifWltocqzHjhPAX5WJj7Q0hVIxAjqx6Clor1N8NOO5auLBReHq+jJlN0kUW1odkWKMSNIiQJFFPMEf9L6PxbvZ/3D9yzVN1Ucubxv8ETCYa1KtXGV18RFu8dmfzOqui6mzBqh0gk8hU99hIof4mDC8wjotjkZy59gBQA0CJqRDSRhXkLozp/HvHkUYlRbzPvwVTqGWl2dq+x8vQCWv59gH8+GQglaH89qI5unojYMx5ipyrZAUaMXIgUmh9FpAbdhMk+f+NGPu5zx+bfIdxQtW56fZxXWHN8hBb1y1sIJH3afpEyvzow4IMANs7SMtvO2HDiUIAFYa7ogCTKn/dGa8xrDJbB102cBUmr8kyro1ymViUJ4D4SJKA7CJZSqcqn7jmgoBb9GBH+BEykpuWHIDLsX/5Cxrkp3Zk9ymL89SntRB/g==",
         "region": {
-            "latitude": 40.10058,
-            "longitude": 116.299418,
+            "latitude": 39.088561,
+            "longitude": 121.832019,
             "country": "中国",
             "nationCode": "156",
-            "province": "北京市",
-            "city": "北京市",
-            "cityCode": "010",
+            "province": "辽宁省",
+            "city": "大连市",
+            "cityCode": "0411",
             "district": null,
             "districtCode": null,
             "startLatitude": 0.0,
@@ -114,7 +92,7 @@
         "accumulativeClimbingDistance": 0.0,
         "mapboxStyle": null,
         "privacy": false,
-        "stepPoints": "H4sIAAAAAAAAE92cTWscRxCG7/4VwmfTdHV955ocAiFgEt+MD4uzDiL6MLsrCAT/9/TKjvzBuiBdc6qDZTSrHY0evXTV9FOj18+urv6Z/66unh/f7/d/PL/64aq/+Hjg7cPhsL87vbo/7W5+P+3fH7988XR9uz+edrfvzwdBsQMgEH/z3p/3u8Ppt91p/73z/vRw2J2u7+8ez8KfvuD6+HL3cHx8z7vdzXF/4X0/7m7uD9f7ry7p7eH+ePzl9tfd4a8vDz/cXf/96sur/eY6Xu7efnV57252fz6e9/Xj5//xeXrt/NLgT8c+PP7/5tJPdj2/4d2nU8+XP7z4v6hHhFp6BjX2qqhH806qqDCAbXSEJfYkEXxN5ZzK5py0kQ8Sdh3eO/oafA8XGU8lX8om30fr1kFGJ0N0I1qCD0gB/dFT0dey0QeUJqJG84OLKa/BV4vgj1T0vWz0waANZkZz6jRcfK3gjqjkDsx1N71s9sfgZjQBwZigFMzW8EtUdAenwj8vrSx+7Y2wO5qOrrPjGUv4EaKyOySXfiybfgRuHUyAdUxKMtaWfuSw7lou/Vw2/cjepMtcfQYNWC28s1+K6Hsu/FI2/LPcNphFt/dBBNRlbe0hiirvXJlS+K1s+ImsqYF2VUFZrrxkUeU9l94Mfq+bfseGMgsv6frCz0+bMRfhUyr7A8pmn1Gbs3YfwxjW8WtUd5FT2Z+dcVn8NhoTqbt1Wr7hFYjqLmou/FQ2/DK0zb6ESIZ5X82+SFh2LZd9Lpv9WWnbvNcCRuvGjovh1x6V3XNTlcGvZcOvIA27zluueV8Ei9n/vId/ET7ksm9ls6/SmzmzWKrrUY/KLmFSb5XNvnVuZDjm2oNnu7WI3zCqu5QTuVjX5M6S2Hq65zSL6i4l3W5duWtOTdgEOyr05brrI6y7ObuLdfWuo7dBMtvyRM/pT33JRfg5u4uF9a5h++h1V2MPHaKayzm1i4Xdbh/WaIDy8JGQu52joss5u4uF9W5XbH2u9+4f95gX+c/fY8Q/53eprt8FAG08F25iy6w/EE5VcU7wUl3BC8DaukNmsATCoSrO2V2qa3cnOGlEhLi+zwMjnKninNulum53guM2U58tvCMcq+Kc3aW6dneC4wY02YP7ulw/T64F/CWnd6mu3j2P1DfuYDh7x3XJMhFHhVdyfpfq+t1zU9iMaVDGcQGFk1WSM7xc1/ACOrbRRS2z2wMUTlZJzvByXcMLhKMx++gzwOubnbN+RNVXco6X6zpeIIXm896LECRx28vhcJXkLC/XtbzAAG0IDRuZwU7gcLpKc5qX62pemCtzExBJ9Z4SjldpzvNyXc87Y+vNxQfaumQHCaerNKd5pa7mBRnecICq4vqGm4bTVZqzvFLX8s41x9qMLnhu30fD+SrNeV6p63lBu7U+RDEnvNRD/jnRK3VF72w5taH6LI64bnrBwm0fTT7IW1f1gpo0nU2/OfHyiA8YR/gtp3ulsO6dwW8A7s6PTzOurj5mEPHP6V4prHs34j9vnSP+Od2rhXXvVvwp5J/TvVpY927FX0P+OeWrhZXvNvzn+h7yz1lfLWx9t+KPIf+c9dXC1ncr/k8d+iX+nrO+Wtj6bsU/HPnxnPXVwtZ3I/6f/+TIRf457WuFte9W/MMnvDznfa2w992Kv4X8c97XCnvfjfiPcOzEc97XCnvfrfijf5//+eneFP/C3ncr/hLyz5lfK2x+t+LvIf+c+/XC7ncj/jhC/jn764Xt71b8OeSfs79e2f5uxN9C/jn765Xt7zb8KZo+oZ7Tv15Z/17i/+zNvxKUQWKsXwAA",
+        "stepPoints": "H4sIAAAAAAAAE+WaTWtbRxSG9/kVIuswnO+PbttFoRRCm13IQqRKEfUXkgyFkv/ekeyapLhTOge8mC4so3t1r+VHD+ecmVfvX202f/Sfzeb18W63++X15psNvHk48PH+cNjdnN7dnrZXP592d8fzScrHs6f99e542l7fnY+iM4oqh8XXF3+/2x5OP21Pu3+68Xf3h+1pf3tzuYs+vmB/fLu9P16u+bS9Ou6eue7b7dXtYb87fnXfw+3x+MP1j9vDb18evr/Z//7uy3f7t/fxdvvxq7f36Wr76+W+7y/P/wL0dO6CQR+Pfb78/vDcf7bvf/Dm4dYETcHdJNAoBKO//POb/8pebcBeACvsGVZlz9kk2NT7Q6KA0RR8H4kvWBJflhVfrWUQBXROBIg+Bz+H8Llkvi1rvnPjTEnP0OAMkSn4SDiiLyX1fVn1ExtRImm6qV0unmCvMGJvJfNzWfMRtRmwWRBS5GzNRx92XK9NO7Cs+sjSKIIsQSgtfE5+Ah7hz5L8vR0ti1+ppWCSgvRPIXDOfuJR3Veo2c/r2u/U7TchcurdlzDn8KuP8FPNfl3X/oSW5paOwuceOYl/OPAr1+y3Ze0n8GZhrr18JLPm3NDJECP8WrM/lrW/F53mD3sxzAAeOIf/qTw/i99q9ue69os36QtdM8DpoZ9NRvCj5D7huu5btHTonReir3Z5cuzkpBH+LLlPtK77ES2IgUJNRHly7JSnwfw5/IY1+2VZ+xmymbICC/r8oktk1HiNavbrsvb3bttA0UCJxCB5bo9ffNR4TWr2+7r2S7ZgRw2CXnnm3O/r5RF8rbkf67rv2Ai998bAQuVXHu33mBcDrnXdT2oqYZ0S9Nl6Gr+N5h6rZbu8brgryC06dq1Vfs3RdpsX4911811hacmcCeKh51XXFH7DUeP1WsDL6ya8otgcJLVPPjI9ddqw9Hst4eV1I14xbpm9dMDjkmsSv45Kv9ciXl434+0Vp/UVr3tvweoxjX+41+y1lJfXjXklvaWlIiXn/NzpMEpavBbzyroxr2LHDwChco65Zmu/D/eavRbzyroxr3K0PhdmcMR5cTSLfzj2Ry3mlXVj3s6miacqE9H8N3w8RrU/ajGvrBvz9rrcKA0CtfIdk8DRlk/UYl5ZN+bV1Ga9OAADOU9nLR3wCH8t5pV1Y15DbMhCXmE/HPqjlvHKuhmvUV/x9qqjgoWQ91/o10JeXTfkfRH6tYxX1814X4J+1iJeXTfifRn67CX62KJPBRjcHyCI/lcfxqsPfwKPYlRFUjcAAA==",
         "fullStepPoints": "H4sIAAAAAAAAE4vm4ooFAKoX6t8EAAAA",
         "baselineAltitude": 0.0,
         "trainingDevices": null,
@@ -135,7 +113,21 @@
         "overseasMapInfo": null,
         "equipmentInfo": null,
         "fences": null,
-        "heartRateGuide": null,
+        "heartRateGuide": {
+            "title": "连接心率设备",
+            "picture": "https://static1.keepcdn.com/infra-cms/2024/3/14/18/52/553246736447566b58312b6e536d45724d31554a72686a5172647631715057797775575658426f714c76553d/600x420_3050b13536d61df7667c4261872877f756c6c636.png",
+            "schema": "keep://store_item/20110?type=1&pageId=44&productDetailType=1&kbizPos=product_hiking_complete",
+            "name": "解锁心率和最大摄氧量数据，获取更精准的运动能力与状态",
+            "button": "立即解锁",
+            "buttonTextColour": "#24c789",
+            "buttonBgColour": [
+                "#ffffff"
+            ],
+            "backgroundColour": [
+                "#f6fbf7",
+                "#ffffff"
+            ]
+        },
         "trainingEffect": null,
         "webviewCards": [],
         "feelFeedback": {
@@ -146,9 +138,9 @@
             "schema": null
         },
         "rpeFeedBack": null,
-        "totalSteps": 2418,
+        "totalSteps": 852,
         "stepFrequencies": null,
-        "averageStepFrequency": 152.60943969341483,
+        "averageStepFrequency": 94.34165648323166,
         "maxDiffOfAltitude": 0.0,
         "kelotonData": null
     },
