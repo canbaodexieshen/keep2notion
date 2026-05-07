@@ -86,7 +86,6 @@ class NotionHelper:
         # 将值写入环境文件
         with open(env_file, "a") as file:
             file.write(f"DATABASE_ID={database_id}\n")
-            
     def extract_page_id(self, notion_url):
         # 正则表达式匹配 32 个字符的 Notion page_id
         match = re.search(
@@ -103,14 +102,13 @@ class NotionHelper:
         # 遍历子块
         for child in children:
             # 检查子块的类型
+
             if child["type"] == "child_database":
                 self.database_id_dict[child.get("child_database").get("title")] = (
                     child.get("id")
                 )
             elif child["type"] == "embed" and child.get("embed").get("url"):
-                url = child.get("embed").get("url")
-                # 修改点 1：扩大识别范围，支持旧域名和 GitHub Raw 域名
-                if "raw.githubusercontent.com" in url:
+                if child.get("embed").get("url").startswith("https://raw.githubusercontent.com/"):
                     self.heatmap_block_id = child.get("id")
             # 如果子块有子块，递归调用函数
             if "has_children" in child and child["has_children"]:
@@ -149,6 +147,7 @@ class NotionHelper:
             year, self.year_database_id, self.get_date_icon(date, "year"), properties
         )
 
+
     def get_day_relation_id(self, date, properties={}):
         new_date = date.replace(hour=0, minute=0, second=0, microsecond=0)
         day = new_date.strftime("%Y年%m月%d日")
@@ -178,8 +177,7 @@ class NotionHelper:
             if id == self.type_database_id:
                 self.append_blocks(
                     block_id=page_id,
-                    # 修改点 2：在新建页面时使用基础的 GitHub Raw 链接作为占位符
-                    children=[get_embed("https://raw.githubusercontent.com/")],
+                    children=[get_embed("https://heatmap.malinkang.com/")],
                 )
         else:
             page_id = response.get("results")[0].get("id")
@@ -287,7 +285,6 @@ class NotionHelper:
                 self.get_relation_id("全部",self.all_database_id,TARGET_ICON_URL),
             ]
         )
-        
     def search_heatmap(self, block_id):
         children = self.client.blocks.children.list(block_id=block_id)["results"]
         # 遍历子块
@@ -295,6 +292,5 @@ class NotionHelper:
             # 检查子块的类型
             if child["type"] == "embed" and child.get("embed").get("url"):
                 url =  child.get("embed").get("url")
-                # 修改点 3：扩大识别范围，支持旧域名和 GitHub Raw 域名
-                if "raw.githubusercontent.com" in url:
+                if url.startswith("https://raw.githubusercontent.com/"):
                     return child.get("id")
