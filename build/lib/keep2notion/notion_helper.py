@@ -102,22 +102,32 @@ class NotionHelper:
         # 遍历子块
         for child in children:
             # 检查子块的类型
-
             if child["type"] == "child_database":
                 self.database_id_dict[child.get("child_database").get("title")] = (
                     child.get("id")
                 )
-            elif child["type"] == "embed" and child.get("embed").get("url"):
-                if child.get("embed").get("url").startswith("https://heatmap.malinkang.com/"):
+            # 新增：识别 Image（图片）块
+            elif child["type"] == "image" and child.get("image").get("type") == "external":
+                url = child.get("image").get("external").get("url")
+                if "raw.githubusercontent.com" in url or "heatmap.malinkang.com" in url:
                     self.heatmap_block_id = child.get("id")
+            # 保留：识别 Embed（嵌入）块（作为兼容）
+            elif child["type"] == "embed" and child.get("embed").get("url"):
+                url = child.get("embed").get("url")
+                if "raw.githubusercontent.com" in url or "heatmap.malinkang.com" in url:
+                    self.heatmap_block_id = child.get("id")
+                    
             # 如果子块有子块，递归调用函数
             if "has_children" in child and child["has_children"]:
                 self.search_database(child["id"])
 
     @retry(stop_max_attempt_number=3, wait_fixed=5000)
     def update_heatmap(self, block_id, url):
-        # 更新 image block 的链接
-        return self.client.blocks.update(block_id=block_id, embed={"url": url})
+        # 尝试作为 image 块更新，如果它恰好是 embed 块会报错，我们就捕获错误并作为 embed 更新
+        try:
+            return self.client.blocks.update(block_id=block_id, image={"external": {"url": url}})
+        except Exception:
+            return self.client.blocks.update(block_id=block_id, embed={"url": url})
 
     def get_week_relation_id(self, date):
         year = date.isocalendar().year
@@ -290,7 +300,14 @@ class NotionHelper:
         # 遍历子块
         for child in children:
             # 检查子块的类型
-            if child["type"] == "embed" and child.get("embed").get("url"):
-                url =  child.get("embed").get("url")
-                if url.startswith("https://heatmap.malinkang.com/"):
+            # 新增：识别 Image（图片）块
+            if child["type"] == "image" and child.get("image").get("type") == "external":
+                url = child.get("image").get("external").get("url")
+                if "raw.githubusercontent.com" in url or "heatmap.malinkang.com" in url:
                     return child.get("id")
+            # 保留：识别 Embed（嵌入）块
+            elif child["type"] == "embed" and child.get("embed").get("url"):
+                url =  child.get("embed").get("url")
+                if "raw.githubusercontent.com" in url or "heatmap.malinkang.com" in url:
+                    return child.get("id")
+        return None
