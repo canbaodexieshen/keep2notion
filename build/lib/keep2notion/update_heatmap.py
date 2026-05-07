@@ -60,7 +60,7 @@ def update_heatmap(dir, block_id):
     image_file = get_file(dir)
     if image_file:
         image_url = f"https://raw.githubusercontent.com/{os.getenv('REPOSITORY')}/{os.getenv('REF').split('/')[-1]}/{dir}/{image_file}"
-        heatmap_url = f"https://heatmap.malinkang.com/?image={image_url}"
+        heatmap_url = image_url
         if block_id:
             notion_helper.update_heatmap(block_id=block_id, url=heatmap_url)
 
