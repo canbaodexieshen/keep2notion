@@ -110,7 +110,7 @@ class NotionHelper:
             elif child["type"] == "embed" and child.get("embed").get("url"):
                 url = child.get("embed").get("url")
                 # 修改点 1：扩大识别范围，支持旧域名和 GitHub Raw 域名
-                if "heatmap.malinkang.com" in url or "raw.githubusercontent.com" in url:
+                if "raw.githubusercontent.com" in url:
                     self.heatmap_block_id = child.get("id")
             # 如果子块有子块，递归调用函数
             if "has_children" in child and child["has_children"]:
@@ -296,5 +296,5 @@ class NotionHelper:
             if child["type"] == "embed" and child.get("embed").get("url"):
                 url =  child.get("embed").get("url")
                 # 修改点 3：扩大识别范围，支持旧域名和 GitHub Raw 域名
-                if "heatmap.malinkang.com" in url or "raw.githubusercontent.com" in url:
+                if "raw.githubusercontent.com" in url:
                     return child.get("id")
