@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       manual_year:
-        description: '2024' # 手动指定年份生成 (例如填入 2023。如果留空，则默认生成去年的)
+        description: '手动指定年份生成 (例如填入 2023。如果留空，则默认生成去年的)' 
         required: false
         default: ''
   schedule:
