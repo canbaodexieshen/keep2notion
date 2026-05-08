@@ -12,6 +12,7 @@ jobs:
     name: Sync
     runs-on: ubuntu-latest
     env:
+        TZ: Asia/Shanghai
         NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
         NOTION_PAGE: ${{ secrets.NOTION_PAGE }}
         KEEP_MOBILE: ${{ secrets.KEEP_MOBILE }}
