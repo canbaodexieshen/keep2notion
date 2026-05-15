@@ -3,6 +3,7 @@ import os
 import shutil
 import subprocess
 import uuid
+import datetime
 from keep2notion.utils import (
     get_property_value
 )
@@ -37,7 +38,8 @@ def main():
         unit = get_property_value(type.get("properties").get("单位"))
         print(unit)
         database_filter = f'{{"property": "运动类型", "relation": {{"contains": "{page_id}"}}}}'
-        command = f'github_heatmap notion --notion_token {notion_token} --database_id {notion_helper.workout_database_id} --database_filter \'{database_filter}\' --date_prop_name 开始时间 --value_prop_name 值 --unit {unit} --year 2025 --me {title} --without-type-name --background-color=#FFFFFF --track-color=#ACE7AE --special-color1=#69C16E --special-color2=#549F57 --dom-color=#EBEDF0 --text-color=#000000'
+        current_year = datetime.datetime.now().year  # 新加入！！！！！！！！
+        command = f'github_heatmap notion --notion_token {notion_token} --database_id {notion_helper.workout_database_id} --database_filter \'{database_filter}\' --date_prop_name 开始时间 --value_prop_name 值 --unit {unit} --year {current_year} --me {title} --without-type-name --background-color=#FFFFFF --track-color=#ACE7AE --special-color1=#69C16E --special-color2=#549F57 --dom-color=#EBEDF0 --text-color=#000000'
         run_command(command)
         # 创建以title命名的文件夹
         hash_object = hashlib.sha256(title.encode('utf-8'))
@@ -60,7 +62,7 @@ def update_heatmap(dir, block_id):
     image_file = get_file(dir)
     if image_file:
         image_url = f"https://raw.githubusercontent.com/{os.getenv('REPOSITORY')}/{os.getenv('REF').split('/')[-1]}/{dir}/{image_file}"
-        heatmap_url = image_url
+        heatmap_url = f"https://canbaodexieshen.github.io/keep2notion/?image={image_url}"
         if block_id:
             notion_helper.update_heatmap(block_id=block_id, url=heatmap_url)
 
