@@ -13,39 +13,56 @@
             min-height: 100vh;
             background-color: #ffffff;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            overflow: hidden; /* 防止双重滚动条 */
+            overflow: hidden;
+            transition: background-color 0.3s;
         }
 
-        /* 修复后的导航栏：在 Notion 中更稳定 */
+        /* 顶部安全区与居中悬浮控制栏 */
         header {
-            background: #fff;
-            padding: 10px 20px;
+            padding: 25px 20px 10px 20px; /* 顶部留白 25px，完美避开 Notion UI */
             display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            border-bottom: 1px solid #f0f0f0;
+            justify-content: center; /* 居中显示 */
             position: sticky;
             top: 0;
             z-index: 100;
         }
 
-        #year-select {
-            padding: 6px 10px;
-            border-radius: 8px;
+        /* 药丸形状的容器 */
+        .controls-wrapper {
+            display: flex;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            padding: 8px 16px;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid #eee;
+            transition: all 0.3s;
+        }
+
+        select, button {
+            padding: 6px 12px;
+            border-radius: 6px;
             border: 1px solid #ddd;
             background-color: #fff;
             font-size: 13px;
             color: #333;
             cursor: pointer;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+            outline: none;
+        }
+
+        select:hover, button:hover {
+            border-color: #bbb;
+            background-color: #f9f9f9;
         }
 
         #heatmap-scroll-container {
             flex: 1;
-            overflow: auto; /* 允许在 Notion 框内横向滚动 */
+            overflow: auto;
             display: flex;
             justify-content: center;
-            padding: 20px;
+            padding: 10px 20px 20px 20px;
         }
 
         #heatmap-content {
@@ -57,6 +74,7 @@
             display: block;
             width: 100%;
             height: auto;
+            transition: filter 0.3s;
         }
 
         .loading-text {
@@ -65,16 +83,45 @@
             text-align: center;
             margin-top: 40px;
         }
+
+        /* ================= 黑暗模式样式 ================= */
+        body.dark-mode {
+            background-color: #191919;
+        }
+
+        body.dark-mode .controls-wrapper {
+            background: rgba(40, 40, 40, 0.9);
+            border-color: #444;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        body.dark-mode select, body.dark-mode button {
+            background-color: #333;
+            color: #eee;
+            border-color: #555;
+        }
+
+        body.dark-mode select:hover, body.dark-mode button:hover {
+            background-color: #444;
+        }
+
+        /* 核心魔法：将白底变为黑底，同时保留绿色的视觉效果 */
+        body.dark-mode svg {
+            filter: invert(0.9) hue-rotate(180deg) brightness(1.1);
+        }
     </style>
 </head>
 <body>
     <header>
-        <select id="year-select">
-            <option value="current">2026 (当前)</option>
-            <option value="2025">2025年存档</option>
-            <option value="2024">2024年存档</option>
-            <option value="2023">2023年存档</option>
-        </select>
+        <div class="controls-wrapper">
+            <select id="year-select">
+                <option value="current">今年 (当前)</option>
+                <option value="2025">2025年存档</option>
+                <option value="2024">2024年存档</option>
+                <option value="2023">2023年存档</option>
+            </select>
+            <button id="theme-toggle">🌙 关灯</button>
+        </div>
     </header>
 
     <div id="heatmap-scroll-container">
@@ -86,12 +133,17 @@
     <script>
         const content = document.getElementById('heatmap-content');
         const yearSelect = document.getElementById('year-select');
+        const themeToggle = document.getElementById('theme-toggle');
+        
+        // 自动修正当前年份的显示文字
+        const currentYear = new Date().getFullYear();
+        yearSelect.options[0].text = `${currentYear} (当前)`;
+
         const params = new URLSearchParams(window.location.search);
         const initialImageUrl = params.get('image');
 
         let baseUrl = "";
         if (initialImageUrl) {
-            // 修正路径解析逻辑，确保能正确找到 old_heatmap
             if (initialImageUrl.includes('/OUT_FOLDER/')) {
                 baseUrl = initialImageUrl.split('/OUT_FOLDER/')[0] + '/';
             } else if (initialImageUrl.includes('/heatmap/')) {
@@ -114,13 +166,26 @@
 
         if (initialImageUrl) loadHeatmap(initialImageUrl);
 
+        // 年份切换逻辑
         yearSelect.addEventListener('change', (e) => {
             if (e.target.value === 'current') {
                 loadHeatmap(initialImageUrl);
             } else {
-                // 确保指向 old_heatmap 文件夹
                 const archiveUrl = `${baseUrl}old_heatmap/${e.target.value}.svg`;
                 loadHeatmap(archiveUrl);
+            }
+        });
+
+        // 黑暗模式切换逻辑
+        let isDarkMode = false;
+        themeToggle.addEventListener('click', () => {
+            isDarkMode = !isDarkMode;
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+                themeToggle.innerText = '☀️ 开灯';
+            } else {
+                document.body.classList.remove('dark-mode');
+                themeToggle.innerText = '🌙 关灯';
             }
         });
     </script>
