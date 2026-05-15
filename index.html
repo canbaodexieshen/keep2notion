@@ -147,7 +147,11 @@
 
         function loadHeatmap(url) {
             content.innerHTML = '<p class="loading-text">正在同步记录...</p>';
-            fetch(url)
+            
+            // 核心魔法：每次请求时自动在链接后加上时间戳，彻底粉碎浏览器缓存
+            const fetchUrl = url + (url.includes('?') ? '&' : '?') + 't=' + new Date().getTime();
+            
+            fetch(fetchUrl)
                 .then(res => {
                     if (!res.ok) throw new Error('未找到文件');
                     return res.text();
