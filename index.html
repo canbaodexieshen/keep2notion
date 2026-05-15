@@ -5,59 +5,130 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>我的运动热力图</title>
     <style>
-        /* 这里是我们为后续黑夜模式留下的样式地基 */
         body {
             margin: 0;
-            padding: 20px;
+            padding: 40px 20px 20px 20px; /* 顶部留出按钮空间 */
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            background-color: #ffffff; 
-            transition: background-color 0.3s; /* 颜色切换时的平滑动画 */
+            background-color: #ffffff;
+            transition: background-color 0.3s;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
+
+        /* 右上角按钮容器 */
+        #controls {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            z-index: 100;
+        }
+
+        /* 圆角矩形切换器样式 */
+        #year-select {
+            padding: 6px 12px;
+            border-radius: 8px; /* 圆角矩形 */
+            border: 1px solid #e0e0e0;
+            background-color: #ffffff;
+            font-size: 14px;
+            color: #333;
+            cursor: pointer;
+            outline: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+        }
+
+        #year-select:hover {
+            border-color: #bbb;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
         #heatmap-container {
-            max-width: 100%;
+            width: 100%;
+            max-width: 1000px;
             overflow-x: auto;
+            display: flex;
+            justify-content: center;
         }
-        /* 稍微美化一下 SVG 的显示 */
+
         svg {
             display: block;
-            margin: 0 auto;
+            width: 100%;
+            height: auto;
+        }
+
+        .loading-text {
+            color: #888;
+            font-size: 14px;
+            margin-top: 50px;
         }
     </style>
 </head>
 <body>
+    <div id="controls">
+        <select id="year-select">
+            <option value="current">2025 (当前)</option>
+            <option value="2024">2024年</option>
+            <option value="2023">2023年</option>
+            </select>
+    </div>
+
     <div id="heatmap-container">
-        <p style="color: #666; font-family: sans-serif;">正在加载热力图...</p>
+        <p class="loading-text">正在加载热力图...</p>
     </div>
 
     <script>
-        // 1. 从你访问的网址中获取 ?image= 后面的参数
+        const container = document.getElementById('heatmap-container');
+        const yearSelect = document.getElementById('year-select');
+        
+        // 1. 获取初始 URL 参数
         const params = new URLSearchParams(window.location.search);
-        const imageUrl = params.get('image');
+        const initialImageUrl = params.get('image');
 
-        if (imageUrl) {
-            // 2. 去获取这个 SVG 文件的源代码
-            fetch(imageUrl)
+        // 自动分析你的 GitHub 仓库基础路径
+        // 假设 initialImageUrl 类似 .../main/OUT_FOLDER/xxx.svg
+        // 我们提取出前面的 .../main/ 部分
+        let baseUrl = "";
+        if (initialImageUrl) {
+            baseUrl = initialImageUrl.split('/OUT_FOLDER/')[0] + '/';
+        }
+
+        // 加载热力图的函数
+        function loadHeatmap(url) {
+            container.innerHTML = '<p class="loading-text">正在更新数据...</p>';
+            fetch(url)
                 .then(response => {
-                    if (!response.ok) throw new Error('网络请求失败');
+                    if (!response.ok) throw new Error('找不到该年份的数据');
                     return response.text();
                 })
                 .then(svgCode => {
-                    // 3. 将 SVG 代码直接注入到网页中！
-                    // 这样一来，SVG 自带的悬停提示（<title>标签）就会被浏览器识别并生效了！
-                    document.getElementById('heatmap-container').innerHTML = svgCode;
+                    container.innerHTML = svgCode;
                 })
                 .catch(err => {
-                    console.error('加载失败:', err);
-                    document.getElementById('heatmap-container').innerHTML = 
-                        '<p style="color: red;">加载热力图出错啦！请检查链接是否正确。</p>';
+                    container.innerHTML = `<p style="color: #ff4d4f; font-size: 14px;">${err.message}</p>`;
                 });
-        } else {
-            document.getElementById('heatmap-container').innerHTML = 
-                '<p style="color: #666;">网址中没有提供热力图链接哦！</p>';
         }
+
+        // 2. 初始化加载（当前年份）
+        if (initialImageUrl) {
+            loadHeatmap(initialImageUrl);
+        }
+
+        // 3. 监听下拉框切换事件
+        yearSelect.addEventListener('change', (e) => {
+            const selectedYear = e.target.value;
+            
+            if (selectedYear === 'current') {
+                // 如果切回当前，使用原始参数里的链接
+                loadHeatmap(initialImageUrl);
+            } else {
+                // 如果切换历史年份，构造指向 old_heatmap 文件夹的链接
+                // 链接格式：.../main/old_heatmap/2024.svg
+                const archiveUrl = `${baseUrl}old_heatmap/${selectedYear}.svg`;
+                loadHeatmap(archiveUrl);
+            }
+        });
     </script>
 </body>
 </html>
