@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的运动热力图</title>
+    <style>
+        /* 这里是我们为后续黑夜模式留下的样式地基 */
+        body {
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #ffffff; 
+            transition: background-color 0.3s; /* 颜色切换时的平滑动画 */
+        }
+        #heatmap-container {
+            max-width: 100%;
+            overflow-x: auto;
+        }
+        /* 稍微美化一下 SVG 的显示 */
+        svg {
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="heatmap-container">
+        <p style="color: #666; font-family: sans-serif;">正在加载热力图...</p>
+    </div>
+
+    <script>
+        // 1. 从你访问的网址中获取 ?image= 后面的参数
+        const params = new URLSearchParams(window.location.search);
+        const imageUrl = params.get('image');
+
+        if (imageUrl) {
+            // 2. 去获取这个 SVG 文件的源代码
+            fetch(imageUrl)
+                .then(response => {
+                    if (!response.ok) throw new Error('网络请求失败');
+                    return response.text();
+                })
+                .then(svgCode => {
+                    // 3. 将 SVG 代码直接注入到网页中！
+                    // 这样一来，SVG 自带的悬停提示（<title>标签）就会被浏览器识别并生效了！
+                    document.getElementById('heatmap-container').innerHTML = svgCode;
+                })
+                .catch(err => {
+                    console.error('加载失败:', err);
+                    document.getElementById('heatmap-container').innerHTML = 
+                        '<p style="color: red;">加载热力图出错啦！请检查链接是否正确。</p>';
+                });
+        } else {
+            document.getElementById('heatmap-container').innerHTML = 
+                '<p style="color: #666;">网址中没有提供热力图链接哦！</p>';
+        }
+    </script>
+</body>
+</html>
