@@ -109,12 +109,12 @@ class NotionHelper:
             # 新增：识别 Image（图片）块
             elif child["type"] == "image" and child.get("image").get("type") == "external":
                 url = child.get("image").get("external").get("url")
-                if "raw.githubusercontent.com" in url or "heatmap.malinkang.com" in url:
+                if "OUT_FOLDER" in url or "heatmap.malinkang.com" in url:
                     self.heatmap_block_id = child.get("id")
             # 保留：识别 Embed（嵌入）块（作为兼容）
             elif child["type"] == "embed" and child.get("embed").get("url"):
                 url = child.get("embed").get("url")
-                if "raw.githubusercontent.com" in url or "heatmap.malinkang.com" in url:
+                if "OUT_FOLDER" in url or "heatmap.malinkang.com" in url:
                     self.heatmap_block_id = child.get("id")
                     
             # 如果子块有子块，递归调用函数
