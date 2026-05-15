@@ -7,49 +7,50 @@
     <style>
         body {
             margin: 0;
-            padding: 40px 20px 20px 20px; /* 顶部留出按钮空间 */
+            padding: 0;
             display: flex;
             flex-direction: column;
-            align-items: center;
             min-height: 100vh;
             background-color: #ffffff;
-            transition: background-color 0.3s;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            overflow: hidden; /* 防止双重滚动条 */
         }
 
-        /* 右上角按钮容器 */
-        #controls {
-            position: fixed;
-            top: 15px;
-            right: 15px;
+        /* 修复后的导航栏：在 Notion 中更稳定 */
+        header {
+            background: #fff;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            border-bottom: 1px solid #f0f0f0;
+            position: sticky;
+            top: 0;
             z-index: 100;
         }
 
-        /* 圆角矩形切换器样式 */
         #year-select {
-            padding: 6px 12px;
-            border-radius: 8px; /* 圆角矩形 */
-            border: 1px solid #e0e0e0;
-            background-color: #ffffff;
-            font-size: 14px;
+            padding: 6px 10px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            font-size: 13px;
             color: #333;
             cursor: pointer;
-            outline: none;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            transition: all 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
-        #year-select:hover {
-            border-color: #bbb;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        #heatmap-container {
-            width: 100%;
-            max-width: 1000px;
-            overflow-x: auto;
+        #heatmap-scroll-container {
+            flex: 1;
+            overflow: auto; /* 允许在 Notion 框内横向滚动 */
             display: flex;
             justify-content: center;
+            padding: 20px;
+        }
+
+        #heatmap-content {
+            width: 100%;
+            max-width: 1000px;
         }
 
         svg {
@@ -61,71 +62,64 @@
         .loading-text {
             color: #888;
             font-size: 14px;
-            margin-top: 50px;
+            text-align: center;
+            margin-top: 40px;
         }
     </style>
 </head>
 <body>
-    <div id="controls">
+    <header>
         <select id="year-select">
-            <option value="current">2025 (当前)</option>
-            <option value="2024">2024年</option>
-            <option value="2023">2023年</option>
-            </select>
-    </div>
+            <option value="current">2026 (当前)</option>
+            <option value="2025">2025年存档</option>
+            <option value="2024">2024年存档</option>
+            <option value="2023">2023年存档</option>
+        </select>
+    </header>
 
-    <div id="heatmap-container">
-        <p class="loading-text">正在加载热力图...</p>
+    <div id="heatmap-scroll-container">
+        <div id="heatmap-content">
+            <p class="loading-text">正在加载热力图数据...</p>
+        </div>
     </div>
 
     <script>
-        const container = document.getElementById('heatmap-container');
+        const content = document.getElementById('heatmap-content');
         const yearSelect = document.getElementById('year-select');
-        
-        // 1. 获取初始 URL 参数
         const params = new URLSearchParams(window.location.search);
         const initialImageUrl = params.get('image');
 
-        // 自动分析你的 GitHub 仓库基础路径
-        // 假设 initialImageUrl 类似 .../main/OUT_FOLDER/xxx.svg
-        // 我们提取出前面的 .../main/ 部分
         let baseUrl = "";
         if (initialImageUrl) {
-            baseUrl = initialImageUrl.split('/OUT_FOLDER/')[0] + '/';
+            // 修正路径解析逻辑，确保能正确找到 old_heatmap
+            if (initialImageUrl.includes('/OUT_FOLDER/')) {
+                baseUrl = initialImageUrl.split('/OUT_FOLDER/')[0] + '/';
+            } else if (initialImageUrl.includes('/heatmap/')) {
+                 baseUrl = initialImageUrl.split('/heatmap/')[0] + '/';
+            }
         }
 
-        // 加载热力图的函数
         function loadHeatmap(url) {
-            container.innerHTML = '<p class="loading-text">正在更新数据...</p>';
+            content.innerHTML = '<p class="loading-text">正在更新...</p>';
             fetch(url)
-                .then(response => {
-                    if (!response.ok) throw new Error('找不到该年份的数据');
-                    return response.text();
+                .then(res => {
+                    if (!res.ok) throw new Error('未找到该年份文件');
+                    return res.text();
                 })
-                .then(svgCode => {
-                    container.innerHTML = svgCode;
-                })
+                .then(svg => { content.innerHTML = svg; })
                 .catch(err => {
-                    container.innerHTML = `<p style="color: #ff4d4f; font-size: 14px;">${err.message}</p>`;
+                    content.innerHTML = `<p style="color:#ff4d4f;text-align:center;font-size:13px;">${err.message}</p>`;
                 });
         }
 
-        // 2. 初始化加载（当前年份）
-        if (initialImageUrl) {
-            loadHeatmap(initialImageUrl);
-        }
+        if (initialImageUrl) loadHeatmap(initialImageUrl);
 
-        // 3. 监听下拉框切换事件
         yearSelect.addEventListener('change', (e) => {
-            const selectedYear = e.target.value;
-            
-            if (selectedYear === 'current') {
-                // 如果切回当前，使用原始参数里的链接
+            if (e.target.value === 'current') {
                 loadHeatmap(initialImageUrl);
             } else {
-                // 如果切换历史年份，构造指向 old_heatmap 文件夹的链接
-                // 链接格式：.../main/old_heatmap/2024.svg
-                const archiveUrl = `${baseUrl}old_heatmap/${selectedYear}.svg`;
+                // 确保指向 old_heatmap 文件夹
+                const archiveUrl = `${baseUrl}old_heatmap/${e.target.value}.svg`;
                 loadHeatmap(archiveUrl);
             }
         });
