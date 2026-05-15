@@ -2,12 +2,12 @@ import hashlib
 import os
 import shutil
 import subprocess
-import uuid
 import datetime
 from keep2notion.utils import (
     get_property_value
 )
 from keep2notion.notion_helper import NotionHelper
+
 def get_file(dir):
     dir =f"./{dir}"
     if os.path.exists(dir) and os.path.isdir(dir):
@@ -38,21 +38,24 @@ def main():
         unit = get_property_value(type.get("properties").get("单位"))
         print(unit)
         database_filter = f'{{"property": "运动类型", "relation": {{"contains": "{page_id}"}}}}'
-        current_year = datetime.datetime.now().year  # 新加入！！！！！！！！
+        
+        current_year = datetime.datetime.now().year
         command = f'github_heatmap notion --notion_token {notion_token} --database_id {notion_helper.workout_database_id} --database_filter \'{database_filter}\' --date_prop_name 开始时间 --value_prop_name 值 --unit {unit} --year {current_year} --me {title} --without-type-name --background-color=#FFFFFF --track-color=#ACE7AE --special-color1=#69C16E --special-color2=#549F57 --dom-color=#EBEDF0 --text-color=#000000'
         run_command(command)
+        
         # 创建以title命名的文件夹
         hash_object = hashlib.sha256(title.encode('utf-8'))
-        hashed_name = hash_object.hexdigest()[:10]  # 使用前10个字符以减少长度
+        hashed_name = hash_object.hexdigest()[:10]
         title_dir = f"heatmap/{hashed_name}"
-        # 如果目录存在则删除
+        
         if os.path.exists(title_dir):
             shutil.rmtree(title_dir)
         os.makedirs(title_dir)
-        # 将OUT_FOLDER中的notion.svg移动到title文件夹
+        
         source_file = "OUT_FOLDER/notion.svg"
         if os.path.exists(source_file):
-            destination_file = f"{title_dir}/{uuid.uuid4()}.svg"
+            # 不再使用 uuid 乱码，固定命名为 notion.svg
+            destination_file = f"{title_dir}/notion.svg"
             os.rename(source_file, destination_file)
             heatmap_block_id=notion_helper.search_heatmap(page_id)
             if heatmap_block_id:
@@ -62,7 +65,10 @@ def update_heatmap(dir, block_id):
     image_file = get_file(dir)
     if image_file:
         image_url = f"https://raw.githubusercontent.com/{os.getenv('REPOSITORY')}/{os.getenv('REF').split('/')[-1]}/{dir}/{image_file}"
+        
+        # 将原生图片链接包装进你的专属网页中（请替换这里的中文！）
         heatmap_url = f"https://canbaodexieshen.github.io/keep2notion/?image={image_url}"
+        
         if block_id:
             notion_helper.update_heatmap(block_id=block_id, url=heatmap_url)
 
