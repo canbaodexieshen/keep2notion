@@ -131,7 +131,7 @@
         const yearSelect = document.getElementById('year-select');
         const themeToggle = document.getElementById('theme-toggle');
         const currentYear = new Date().getFullYear();
-        yearSelect.options[0].text = `${currentYear} (当前)`;
+        yearSelect.options[0].text = `${currentYear} `;
 
         const params = new URLSearchParams(window.location.search);
         const initialImageUrl = params.get('image');
