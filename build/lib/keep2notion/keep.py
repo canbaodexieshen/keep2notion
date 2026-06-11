@@ -295,9 +295,9 @@ def main():
     s = get_lastest()
     token = login()
     keep_headers["Authorization"] = f"Bearer {token}"
-    weight_data = get_weight_data()
-    if weight_data:
-        insert_weight_data_to_notion(weight_data)
+    # weight_data = get_weight_data()
+    # if weight_data:
+    #    insert_weight_data_to_notion(weight_data)
     equipments = get_equipment()
     equipment_dict= {}
     if equipments:
