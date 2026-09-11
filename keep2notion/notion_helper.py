@@ -2,6 +2,8 @@ import logging
 import os
 import re
 import time
+import io
+import zipfile
 
 from notion_client import Client
 from retrying import retry
@@ -207,6 +209,32 @@ class NotionHelper:
         return self.client.pages.create(
             parent=parent, properties=properties, cover=cover, icon=icon
         )
+
+    @retry(stop_max_attempt_number=3, wait_fixed=5000)
+    def upload_workout_files(self, fit_path, tcx_path):
+        """将 FIT/TCX 打包为 zip 上传至 Notion，返回 file_upload id。
+
+        Notion 文件上传白名单不允许 .fit，仅允许 zip 等类型，故打包上传。
+        """
+        base_name = os.path.splitext(os.path.basename(fit_path))[0]
+        zip_name = f"{base_name}.zip"
+        buf = io.BytesIO()
+        with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as zf:
+            zf.write(fit_path, os.path.basename(fit_path))
+            zf.write(tcx_path, os.path.basename(tcx_path))
+        content = buf.getvalue()
+        # 免费版工作区单文件限制 5MiB
+        if len(content) >= 5 * 1024 * 1024:
+            print(f"警告: {zip_name} 大小 {len(content)} 字节, 超过 5MiB 限制, 跳过上传")
+            return None
+        file_upload = self.client.file_uploads.create(
+            mode="single_part", filename=zip_name, content_type="application/zip"
+        )
+        self.client.file_uploads.send(
+            file_upload_id=file_upload["id"],
+            file=(zip_name, content, "application/zip"),
+        )
+        return file_upload["id"]
 
     @retry(stop_max_attempt_number=3, wait_fixed=5000)
     def query(self, **kwargs):

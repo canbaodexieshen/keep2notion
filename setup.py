@@ -13,6 +13,9 @@ setup(
         "python-dotenv",
         "emoji",
         "bson",
+        "fit-tool",
+        "pycryptodome",
+        "eviltransform",
     ],
     entry_points={
         "console_scripts": [
