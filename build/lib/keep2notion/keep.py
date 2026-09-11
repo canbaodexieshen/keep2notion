@@ -2,11 +2,14 @@
 # -*- coding: UTF-8 -*-
 import json
 import os
+import tempfile
+import time
 from dotenv import load_dotenv
 import pendulum
 from keep2notion.notion_helper import NotionHelper
 import requests
 from keep2notion import utils
+from keep2notion import fit_helper
 from keep2notion.config import workout_properties_type_dict
 
 LOGIN_API = "https://api.gotokeep.com/v1.1/users/login"
@@ -267,12 +270,30 @@ def get_run_data(log,equipment_dict):
         equipment = get_enable_bind_equipment(log.get("id"),equipment_dict)
         if equipment:
             workout["我的装备"] = equipment
-        add_to_notion(workout, end_time, log.get("icon"), cover)
+        file_upload_id = generate_and_upload_files(data, log.get("type"))
+        add_to_notion(workout, end_time, log.get("icon"), cover, file_upload_id)
 
 
-def add_to_notion(workout, end_time, icon, cover):
+def generate_and_upload_files(data, log_type):
+    """生成 FIT/TCX 文件并打包 zip 上传至 Notion，返回 file_upload id（失败返回 None）。"""
+    try:
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            fit_path, tcx_path = fit_helper.generate_workout_files(
+                data, tmp_dir, log_type
+            )
+            return notion_helper.upload_workout_files(fit_path, tcx_path)
+    except Exception as e:
+        print(f"生成/上传运动数据文件失败: {e}")
+        return None
+
+
+def add_to_notion(workout, end_time, icon, cover, file_upload_id=None):
     properties = utils.get_properties(workout, workout_properties_type_dict)
     notion_helper.get_date_relation(properties, end_time)
+    if file_upload_id:
+        properties["运动数据"] = {
+            "files": [{"type": "file_upload", "file_upload": {"id": file_upload_id}}]
+        }
     parent = {
         "database_id": notion_helper.workout_database_id,
         "type": "database_id",
@@ -291,6 +312,81 @@ def add_to_notion(workout, end_time, icon, cover):
     )
 notion_helper = NotionHelper()
 
+def ensure_workout_file_property():
+    """确保运动数据库存在"运动数据"文件属性，不存在则自动创建。"""
+    try:
+        db = notion_helper.client.databases.retrieve(
+            database_id=notion_helper.workout_database_id
+        )
+        prop = db.get("properties", {}).get("运动数据")
+        if prop and prop.get("type") == "files":
+            return
+        notion_helper.client.databases.update(
+            database_id=notion_helper.workout_database_id,
+            properties={"运动数据": {"files": {}}},
+        )
+        print("已在运动数据库创建'运动数据'文件属性")
+    except Exception as e:
+        print(f"检查/创建'运动数据'属性失败: {e}, 请手动在 Notion 运动数据库中添加该文件属性")
+
+def backfill_fit_data(logs):
+    """为 Notion 中已存在但'运动数据'为空的运动页面回填 FIT/TCX zip。"""
+    pages = notion_helper.query_all(notion_helper.workout_database_id)
+    pending = {}
+    for page in pages:
+        props = page.get("properties", {})
+        id_prop = props.get("Id")
+        if not id_prop:
+            continue
+        rich_text = id_prop.get("rich_text")
+        if not rich_text:
+            continue
+        keep_id = rich_text[0].get("plain_text")
+        file_prop = props.get("运动数据")
+        if file_prop and file_prop.get("files"):
+            continue
+        pending[keep_id] = page.get("id")
+    if not pending:
+        print("没有需要回填运动数据的页面")
+        return
+    print(f"需要回填运动数据的页面数: {len(pending)}")
+    type_map = {log.get("id"): log.get("type") for log in logs}
+    count = 0
+    for keep_id, page_id in pending.items():
+        log_type = type_map.get(keep_id)
+        if not log_type:
+            print(f"Keep 中未找到记录 {keep_id}, 跳过")
+            continue
+        try:
+            r = requests.get(
+                LOG_API.format(type=log_type, id=keep_id), headers=keep_headers
+            )
+            if not r.ok:
+                print(f"获取 Keep 详情失败 {keep_id}: {r.text[:100]}")
+                continue
+            data = r.json().get("data")
+            file_upload_id = generate_and_upload_files(data, log_type)
+            if file_upload_id:
+                notion_helper.client.pages.update(
+                    page_id=page_id,
+                    properties={
+                        "运动数据": {
+                            "files": [
+                                {
+                                    "type": "file_upload",
+                                    "file_upload": {"id": file_upload_id},
+                                }
+                            ]
+                        }
+                    },
+                )
+                count += 1
+                print(f"已回填 {keep_id}")
+        except Exception as e:
+            print(f"回填 {keep_id} 失败: {e}")
+        time.sleep(1)
+    print(f"回填完成, 共 {count} 条")
+
 def main():
     s = get_lastest()
     token = login()
@@ -298,6 +394,7 @@ def main():
     # weight_data = get_weight_data()
     # if weight_data:
     #    insert_weight_data_to_notion(weight_data)
+    ensure_workout_file_property()
     equipments = get_equipment()
     equipment_dict= {}
     if equipments:
@@ -314,6 +411,7 @@ def main():
             if log.get("isDoubtful"):
                 continue
             get_run_data(log,equipment_dict)
+        backfill_fit_data(logs)
 
 if __name__ == "__main__":
     main()

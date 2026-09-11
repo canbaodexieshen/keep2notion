@@ -18,6 +18,9 @@ Requires-Dist: github-heatmap
 Requires-Dist: python-dotenv
 Requires-Dist: emoji
 Requires-Dist: bson
+Requires-Dist: fit-tool
+Requires-Dist: pycryptodome
+Requires-Dist: eviltransform
 Dynamic: author
 Dynamic: author-email
 Dynamic: classifier

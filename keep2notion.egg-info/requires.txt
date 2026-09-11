@@ -6,3 +6,6 @@ github-heatmap
 python-dotenv
 emoji
 bson
+fit-tool
+pycryptodome
+eviltransform
