@@ -10,7 +10,7 @@ concurrency:
 jobs:
   sync:
     name: Sync
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     env:
         TZ: Asia/Shanghai
         NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
